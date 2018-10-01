@@ -126,7 +126,7 @@ app.use((err, req, res, next) => {
   if (err.stack) {
     err = err.stack;
   }
-  res.status(500).render('errors/500', { error: err });
+  res.status(500).send('errors/500', { error: err });
 });
 
 
