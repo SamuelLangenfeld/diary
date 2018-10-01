@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "heroku-postbuild": "cd client && npm && npm run build",
+    "heroku-postbuild": "cd client && npm && npm install && npm run build",
     "start-dev": "nodemon app.js"
   },
   "author": "",
@@ -27,5 +27,8 @@
     "method-override": "^3.0.0",
     "morgan": "^1.9.1",
     "morgan-toolkit": "^1.2.2"
+  },
+  "engines": {
+    "node": "10.10.0"
   }
 }
