@@ -99,7 +99,7 @@ app.use('/', (req, res) => {
 const port = process.env.PORT ||
   process.argv[2] ||
   3000;
-const host = 'localhost';
+const host = process.env.HOST || 'localhost';
 
 let args;
 process.env.NODE_ENV === 'production' ?
@@ -126,6 +126,11 @@ app.use((err, req, res, next) => {
   if (err.stack) {
     err = err.stack;
   }
+  res.status(err.status || 500);
+  res.json({
+    message: err.message,
+    error: err
+  });
 });
 
 
