@@ -16,10 +16,10 @@ router.post("/", async (req, res, next) => {
 
 router.get("/", async (req, res, next) => {
   try {
-    let entries = await Entry.find();
+    let entries = await Entry.find().sort({ createdAt: -1 });
     entries = entries.map(entry => {
-      const { title, createdAt, updatedAt, id } = entry;
-      return { title, createdAt, updatedAt, id };
+      const { title, createdAt, updatedAt, id, body } = entry;
+      return { title, createdAt, updatedAt, id, body };
     });
     res.json(entries);
   } catch (e) {
