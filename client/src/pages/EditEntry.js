@@ -3,68 +3,70 @@ import Button from "@material-ui/core/Button";
 import Layout from "../components/Layout";
 import TextInput from "../components/TextInput";
 import Header from "../components/Header";
+import { withRouter } from "react-router-dom";
 
 const fetch = window.fetch;
+const deleteButtonStyle = { float: "right" };
 
 class EditEntry extends Component {
   componentDidMount() {
-    var headers = new Headers();
-    headers.append("content-type", "application/json");
-    const options = {
-      headers
-    };
-    fetch(`/api/entries/${this.props.id}`, options)
-      .then(res => res.json())
-      .then(json => {
-        this.setState(state => {
-          const { title, body } = json;
-          return { ...state, title, body };
-        });
-      })
-      .catch(err => console.log(err));
+    if (this.props.match.params.id != this.props.currentEntry.id) {
+      var headers = new Headers();
+      headers.append("content-type", "application/json");
+      const options = {
+        headers
+      };
+      fetch(`/api/entries/${this.props.match.params.id}`, options)
+        .then(res => res.json())
+        .then(json => {
+          this.props.updateContext({ currentEntry: json });
+        })
+        .catch(err => console.log(err));
+    }
   }
 
-  constructor(props) {
-    super(props);
-    this.state = { ...this.props };
-  }
-
-  changeTitle = e => {
-    const title = e.target.value;
-    this.setState(state => {
-      return {
-        ...state,
-        title
-      };
-    });
-  };
-
-  changeBody = e => {
-    const body = e.target.value;
-    this.setState(state => {
-      return {
-        ...state,
-        body
-      };
+  changeHandler = e => {
+    const { name, value } = e.target;
+    this.props.updateContext({
+      currentEntry: { ...this.props.currentEntry, [name]: value }
     });
   };
 
   saveEntry = () => {
-    const { title, body, id } = this.state;
     var headers = new Headers();
     headers.append("content-type", "application/json");
     const options = {
       method: "POST",
-      body: JSON.stringify({ title, body }),
+      body: JSON.stringify({ ...this.props.currentEntry }),
       headers
     };
-    fetch(`/api/entries/${id}`, options)
-      .then(response => console.log(response))
+    fetch(`/api/entries/${this.props.currentEntry.id}`, options)
+      .then(response => response.json())
+      .then(json => this.props.updateContext({ currentEntry: json }))
+      .catch(err => console.log(err));
+  };
+
+  deleteEntry = () => {
+    var headers = new Headers();
+    headers.append("content-type", "application/json");
+    const options = {
+      method: "DELETE",
+      body: JSON.stringify({ id: this.props.currentEntry.id }),
+      headers
+    };
+    fetch(`/api/entries/${this.props.currentEntry.id}`, options)
+      .then(response => {
+        let entries = this.props.entries.filter(
+          entry => entry.id !== this.props.currentEntry.id
+        );
+        this.props.updateContext({ currentEntry: {}, entries });
+        this.props.history.push("/entries");
+      })
       .catch(err => console.log(err));
   };
 
   render() {
-    const { title, body } = this.state;
+    const { title, body } = this.props.currentEntry;
     return (
       <div className="App">
         <Layout>
@@ -74,7 +76,7 @@ class EditEntry extends Component {
             placeholder={"Title . . ."}
             fullWidth
             name={"title"}
-            onChange={this.changeTitle}
+            onChange={this.changeHandler}
             value={title}
           />
           <TextInput
@@ -83,20 +85,30 @@ class EditEntry extends Component {
             placeholder={"What's up? . . ."}
             fullWidth
             name={"body"}
-            onChange={this.changeBody}
+            onChange={this.changeHandler}
             value={body}
           />
-          <Button
-            variant={"contained"}
-            color={"primary"}
-            onClick={this.saveEntry}
-          >
-            Save your shit
-          </Button>
+          <div>
+            <Button
+              variant={"contained"}
+              color={"primary"}
+              onClick={this.saveEntry}
+            >
+              Save your shit
+            </Button>
+            <Button
+              variant={"contained"}
+              color={"secondary"}
+              onClick={this.deleteEntry}
+              style={deleteButtonStyle}
+            >
+              Delete this noise
+            </Button>
+          </div>
         </Layout>
       </div>
     );
   }
 }
 
-export default EditEntry;
+export default withRouter(EditEntry);

@@ -8,15 +8,9 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import Layout from "../components/Layout";
 import { paper } from "../styles";
+import { Link } from "react-router-dom";
 
 class EntriesPage extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      entries: ""
-    };
-  }
-
   componentDidMount() {
     this.fetchEntries();
   }
@@ -31,9 +25,7 @@ class EntriesPage extends React.Component {
       .fetch("/api/entries", options)
       .then(res => res.json())
       .then(res => {
-        this.setState(state => {
-          return { ...state, entries: res };
-        });
+        this.props.updateContext({ entries: res });
       })
       .catch(e => {
         console.log(e);
@@ -41,15 +33,23 @@ class EntriesPage extends React.Component {
   };
 
   render() {
-    const { entries } = this.state;
+    const { entries } = this.props;
     const entryCells =
       entries &&
-      entries.map((entry, index) => {
+      entries.map(entry => {
+        if (!entry) {
+          return null;
+        }
+
+        const { id, title, createdAt, updatedAt } = entry;
+
         return (
-          <TableRow key={index}>
-            <TableCell>{entry && entry.title}</TableCell>
-            <TableCell>{entry && entry.createdAt.slice(0, 10)}</TableCell>
-            <TableCell>{entry && entry.updatedAt.slice(0, 10)}</TableCell>
+          <TableRow key={id}>
+            <TableCell>
+              <Link to={`/entries/${id}`}>{title || "untitled"}</Link>
+            </TableCell>
+            <TableCell>{createdAt.slice(0, 10)}</TableCell>
+            <TableCell>{updatedAt.slice(0, 10)}</TableCell>
           </TableRow>
         );
       });
