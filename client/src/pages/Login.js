@@ -42,13 +42,14 @@ class Login extends Component {
     return (
       <Layout>
         <Header>{"Login to Do Anything"}</Header>
-        <TextInput
-          placeholder={"Password"}
-          name={"user"}
-          onChange={this.changePassword}
-          type={"password"}
-          containerProps={{ style: { width: "auto" } }}
-        />
+        <div style={{ display: "inline-block" }}>
+          <TextInput
+            placeholder={"Password"}
+            name={"user"}
+            onChange={this.changePassword}
+            type={"password"}
+          />
+        </div>
         <Button
           variant={"contained"}
           color={"primary"}

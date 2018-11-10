@@ -10,9 +10,8 @@ const paperStyle = {
 
 const TextInput = props => {
   const { containerProps, ...restProps } = props;
-  const newStyle = { ...paperStyle, ...containerProps.style };
   return (
-    <Paper style={newStyle}>
+    <Paper style={paperStyle} {...containerProps}>
       <TextField {...restProps} />
     </Paper>
   );
