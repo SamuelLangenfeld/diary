@@ -3,6 +3,7 @@ import Button from "@material-ui/core/Button";
 import Layout from "../components/Layout";
 import TextInput from "../components/TextInput";
 import Header from "../components/Header";
+import { withRouter } from "react-router-dom";
 
 const fetch = window.fetch;
 
@@ -73,7 +74,12 @@ class NewEntry extends Component {
     };
     fetch("/api/entries", options)
       .then(response => response.json())
-      .then(json => this.props.history.push(`/entries/`))
+      .then(json => {
+        this.props.updateContext(
+          { entries: { ...this.props.entries, [json.id]: json } },
+          () => this.props.history.push(`/entries/`)
+        );
+      })
       .catch(err => console.log(err));
   };
 
@@ -110,4 +116,4 @@ class NewEntry extends Component {
   }
 }
 
-export default NewEntry;
+export default withRouter(NewEntry);

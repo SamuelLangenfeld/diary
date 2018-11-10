@@ -28,9 +28,17 @@ class Login extends Component {
       headers
     };
     fetch("/login", options)
-      .then(response =>
-        this.props.updateContext({ loggedIn: true }, this.redirect)
-      )
+      .then(response => response.json())
+      .then(json => {
+        const entries = {};
+        json.forEach(entry => {
+          entries[entry.id] = entry;
+        });
+        this.props.updateContext(
+          { loggedIn: true, entries: json },
+          this.redirect
+        );
+      })
       .catch(err => console.log(err));
   };
 

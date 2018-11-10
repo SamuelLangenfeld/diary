@@ -58,13 +58,30 @@ const Login = () => {
   );
 };
 
+const NewEntry = () => {
+  return (
+    <DiaryContext.Consumer>
+      {value => (
+        <NewEntryPage
+          entries={value.entries}
+          updateContext={value.updateContext}
+        />
+      )}
+    </DiaryContext.Consumer>
+  );
+};
+
 class App extends Component {
   componentDidMount() {
     var headers = new Headers();
     headers.append("content-type", "application/json");
     fetch("/api/entries")
       .then(response => response.json())
-      .then(entries => {
+      .then(json => {
+        const entries = {};
+        json.forEach(entry => {
+          entries[entry.id] = entry;
+        });
         this.setState(state => {
           return { ...state, entries, loggedIn: true };
         }, this.loginRedirect);
@@ -81,7 +98,7 @@ class App extends Component {
     this.state = {
       loggedIn: false,
       currentEntry: {},
-      entries: [],
+      entries: {},
       updateContext: (obj, callback) => {
         console.log("it happened!");
         console.log(obj);
@@ -104,7 +121,7 @@ class App extends Component {
       <Switch>
         <Route exact path="/" component={Login} />
         <Route exact path="/login" component={Login} />
-        <Route exact path="/newEntry" component={NewEntryPage} />
+        <Route exact path="/newEntry" component={NewEntry} />
         <Route exact path="/entries" component={Entries} />
         <Route path="/entries/:id" component={Entry} />
       </Switch>

@@ -42,7 +42,11 @@ class EditEntry extends Component {
     };
     fetch(`/api/entries/${this.props.currentEntry.id}`, options)
       .then(response => response.json())
-      .then(json => this.props.updateContext({ currentEntry: json }))
+      .then(json => {
+        const entries = { ...this.props.entries };
+        entries[json.id] = json;
+        this.props.updateContext({ currentEntry: json, entries });
+      })
       .catch(err => console.log(err));
   };
 
@@ -56,9 +60,8 @@ class EditEntry extends Component {
     };
     fetch(`/api/entries/${this.props.currentEntry.id}`, options)
       .then(response => {
-        let entries = this.props.entries.filter(
-          entry => entry.id !== this.props.currentEntry.id
-        );
+        const entries = { ...this.props.entries };
+        delete entries[this.props.currentEntry.id];
         this.props.updateContext({ currentEntry: {}, entries });
         this.props.history.push("/entries");
       })

@@ -25,6 +25,10 @@ class EntriesPage extends React.Component {
       .fetch("/api/entries", options)
       .then(res => res.json())
       .then(res => {
+        const entries = {};
+        res.forEach(entry => {
+          entries[entry.id] = entry;
+        });
         this.props.updateContext({ entries: res });
       })
       .catch(e => {
@@ -34,13 +38,21 @@ class EntriesPage extends React.Component {
 
   render() {
     const { entries } = this.props;
+    const entryKeys = Object.keys(entries).sort((a, b) => {
+      if (!entries[b]) {
+        return -1;
+      }
+      if (!entries[a]) {
+        return 1;
+      }
+      const Date1 = new Date(entries[a].createdAt);
+      const Date2 = new Date(entries[b].createdAt);
+      return Date2 - Date1;
+    });
     const entryCells =
       entries &&
-      entries.map(entry => {
-        if (!entry) {
-          return null;
-        }
-
+      entryKeys.map(entryId => {
+        const entry = entries[entryId];
         const clickListener = () => {
           this.props.updateContext({
             currentEntry: { ...entry }

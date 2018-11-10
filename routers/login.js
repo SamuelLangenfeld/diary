@@ -5,7 +5,7 @@ router.post("/", (req, res, next) => {
   const { password } = req.body;
   if (password === process.env.PERSONAL_PASSWORD) {
     req.session.password = password;
-    res.sendStatus(200);
+    res.redirect("../api/entries");
   }
   next();
 });
