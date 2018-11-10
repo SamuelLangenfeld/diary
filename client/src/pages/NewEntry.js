@@ -72,7 +72,8 @@ class NewEntry extends Component {
       headers
     };
     fetch("/api/entries", options)
-      .then(response => console.log(response))
+      .then(response => response.json())
+      .then(json => this.props.history.push(`/entries/`))
       .catch(err => console.log(err));
   };
 

@@ -10,19 +10,19 @@ const deleteButtonStyle = { float: "right" };
 
 class EditEntry extends Component {
   componentDidMount() {
-    if (this.props.match.params.id != this.props.currentEntry.id) {
-      var headers = new Headers();
-      headers.append("content-type", "application/json");
-      const options = {
-        headers
-      };
-      fetch(`/api/entries/${this.props.match.params.id}`, options)
-        .then(res => res.json())
-        .then(json => {
-          this.props.updateContext({ currentEntry: json });
-        })
-        .catch(err => console.log(err));
-    }
+    // if (this.props.match.params.id != this.props.currentEntry.id) {
+    //   var headers = new Headers();
+    //   headers.append("content-type", "application/json");
+    //   const options = {
+    //     headers
+    //   };
+    //   fetch(`/api/entries/${this.props.match.params.id}`, options)
+    //     .then(res => res.json())
+    //     .then(json => {
+    //       this.props.updateContext({ currentEntry: json });
+    //     })
+    //     .catch(err => console.log(err));
+    // }
   }
 
   changeHandler = e => {

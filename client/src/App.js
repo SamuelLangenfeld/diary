@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import NewEntryPage from "./pages/NewEntry";
 import EntriesPage from "./pages/Entries";
-import Login from "./pages/Login";
-import { Route } from "react-router-dom";
+import LoginPage from "./pages/Login";
+import { Route, Redirect, Switch, withRouter } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import EditEntry from "./pages/EditEntry";
 import { createMuiTheme } from "@material-ui/core/styles";
@@ -31,7 +31,7 @@ const Entries = () => {
   );
 };
 
-const Entry = value => {
+const Entry = () => {
   return (
     <DiaryContext.Consumer>
       {value => (
@@ -45,47 +45,78 @@ const Entry = value => {
   );
 };
 
+const Login = () => {
+  return (
+    <DiaryContext.Consumer>
+      {value => (
+        <LoginPage
+          loggedIn={value.loggedIn}
+          updateContext={value.updateContext}
+        />
+      )}
+    </DiaryContext.Consumer>
+  );
+};
+
 class App extends Component {
   componentDidMount() {
-    // var headers = new Headers();
-    // headers.append("content-type", "application/json");
-    // const options = {
-    //   method: "POST",
-    //   body: JSON.stringify({ title: "newest", body: "test body" }),
-    //   headers
-    // };
-    // fetch("/api/entries", options)
-    //   .then(response => console.log(response))
-    //   .catch(err => console.log(err));
+    var headers = new Headers();
+    headers.append("content-type", "application/json");
+    fetch("/api/entries")
+      .then(response => response.json())
+      .then(entries => {
+        this.setState(state => {
+          return { ...state, entries, loggedIn: true };
+        }, this.loginRedirect);
+      })
+      .catch(err => console.log(err));
   }
+
+  loginRedirect = () => {
+    this.props.history.push("/entries");
+  };
 
   constructor(props) {
     super(props);
     this.state = {
-      user: "",
+      loggedIn: false,
       currentEntry: {},
       entries: [],
-      updateContext: obj => {
+      updateContext: (obj, callback) => {
         console.log("it happened!");
         console.log(obj);
+        console.log(callback);
         this.setState(state => {
           return { ...state, ...obj };
-        });
+        }, callback);
       }
     };
   }
 
   render() {
-    // return <div>{!this.state.user && <Redirect to="/login" />}</div>;
+    const redirect = <Redirect to={"/"} />;
+
+    if (this.props.location.pathname !== "/" && !this.state.loggedIn) {
+      return redirect;
+    }
+
+    const routes = (
+      <Switch>
+        <Route exact path="/" component={Login} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/newEntry" component={NewEntryPage} />
+        <Route exact path="/entries" component={Entries} />
+        <Route path="/entries/:id" component={Entry} />
+      </Switch>
+    );
+
     return (
       <DiaryContext.Provider value={this.state}>
         <Navbar />
-        <Route exact path="/" component={NewEntryPage} />
-        <Route exact path="/entries" component={Entries} />
-        <Route path="/entries/:id" component={Entry} />
+        {routes}
       </DiaryContext.Provider>
     );
   }
 }
 
-export default App;
+export default withRouter(App);

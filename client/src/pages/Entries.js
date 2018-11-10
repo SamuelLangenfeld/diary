@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 
 class EntriesPage extends React.Component {
   componentDidMount() {
-    this.fetchEntries();
+    // this.fetchEntries();
   }
 
   fetchEntries = () => {
@@ -41,12 +41,20 @@ class EntriesPage extends React.Component {
           return null;
         }
 
+        const clickListener = () => {
+          this.props.updateContext({
+            currentEntry: { ...entry }
+          });
+        };
+
         const { id, title, createdAt, updatedAt } = entry;
 
         return (
           <TableRow key={id}>
             <TableCell>
-              <Link to={`/entries/${id}`}>{title || "untitled"}</Link>
+              <Link to={`/entries/${id}`} onClick={clickListener}>
+                {title || "untitled"}
+              </Link>
             </TableCell>
             <TableCell>{createdAt.slice(0, 10)}</TableCell>
             <TableCell>{updatedAt.slice(0, 10)}</TableCell>

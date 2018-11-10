@@ -4,18 +4,14 @@ import Header from "../components/Header";
 import TextInput from "../components/TextInput";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
 
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.state = { username: "", password: "" };
+    this.state = { password: "" };
     this.login = props.login;
   }
-
-  changeUsername = e => {
-    const username = e.target.value;
-    this.setState(state => ({ ...state, username }));
-  };
 
   changePassword = e => {
     const password = e.target.value;
@@ -23,10 +19,23 @@ class Login extends Component {
   };
 
   attemptLogin = () => {
-    this.login({
-      username: this.state.username,
-      password: this.state.password
-    });
+    const { password } = this.state;
+    var headers = new Headers();
+    headers.append("content-type", "application/json");
+    const options = {
+      method: "POST",
+      body: JSON.stringify({ password }),
+      headers
+    };
+    fetch("/login", options)
+      .then(response =>
+        this.props.updateContext({ loggedIn: true }, this.redirect)
+      )
+      .catch(err => console.log(err));
+  };
+
+  redirect = () => {
+    this.props.history.push("/entries");
   };
 
   render() {
@@ -34,15 +43,11 @@ class Login extends Component {
       <Layout>
         <Header>{"Login to Do Anything"}</Header>
         <TextInput
-          placeholder={"Username"}
-          name={"username"}
-          onChange={this.changeUsername}
-        />
-        <TextInput
           placeholder={"Password"}
           name={"user"}
           onChange={this.changePassword}
           type={"password"}
+          style={{ width: "50%", marginLeft: "auto" }}
         />
         <Button
           variant={"contained"}
@@ -60,4 +65,4 @@ Login.propTypes = {
   login: PropTypes.func
 };
 
-export default Login;
+export default withRouter(Login);

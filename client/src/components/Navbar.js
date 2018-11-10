@@ -14,8 +14,11 @@ const Navbar = () => {
         <Link to="/entries" style={linkStyle}>
           <Button style={{ color: "white" }}>See your Entries</Button>
         </Link>
-        <Link to="/" style={linkStyle}>
+        <Link to="/newEntry" style={linkStyle}>
           <Button variant={"outlined"}>Write an Entry</Button>
+        </Link>
+        <Link to="/login" style={linkStyle}>
+          <Button variant={"outlined"}>Log In</Button>
         </Link>
       </Toolbar>
     </AppBar>

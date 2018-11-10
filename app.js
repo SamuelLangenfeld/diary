@@ -3,29 +3,23 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const api = require("./routers/api");
+const login = require("./routers/login");
+
+// ----------------------------------------
+// Database
+// ----------------------------------------
+
+const dbURI =
+  process.env.NODE_ENV === "production"
+    ? process.env.MONGOLAB_URI
+    : "mongodb://localhost/test";
 
 mongoose.connect(
-  "mongodb://localhost/test",
+  dbURI,
   { useNewUrlParser: true }
 );
-var db = mongoose.connection;
+const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
-
-var Schema = mongoose.Schema;
-var blogSchema = new Schema({
-  title: String,
-  author: String,
-  body: String,
-  comments: [{ body: String, date: Date }],
-  date: { type: Date, default: Date.now },
-  hidden: Boolean,
-  meta: {
-    votes: Number,
-    favs: Number
-  }
-});
-
-var Blog = mongoose.model("Blog", blogSchema);
 
 // ----------------------------------------
 // App Variables
@@ -106,6 +100,11 @@ app.use(morganToolkit());
 // ----------------------------------------
 // Routes
 // ----------------------------------------
+// first login route
+// then check for logged in session
+// if no, send error
+
+app.use("/login", login);
 
 app.use("/api", api);
 
