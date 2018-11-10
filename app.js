@@ -11,7 +11,7 @@ const login = require("./routers/login");
 
 const dbURI =
   process.env.NODE_ENV === "production"
-    ? process.env.MONGOLAB_URI
+    ? process.env.MONGODB_URI
     : "mongodb://localhost/test";
 
 mongoose.connect(
