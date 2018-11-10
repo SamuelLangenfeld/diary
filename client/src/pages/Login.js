@@ -47,7 +47,7 @@ class Login extends Component {
           name={"user"}
           onChange={this.changePassword}
           type={"password"}
-          style={{ width: "50%", marginLeft: "auto" }}
+          containerProps={{ style: { width: "auto" } }}
         />
         <Button
           variant={"contained"}

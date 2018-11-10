@@ -26,7 +26,7 @@ class SimpleLogin extends React.Component {
     };
     fetch("/myLogin", options)
       .then(response => response.json())
-      .then(password => this.props.updateContext({ password: password }))
+      .then(password => this.props.updateContext({ userToken: userToken }))
       .catch(err => console.log(err));
   };
 

@@ -79,7 +79,7 @@ class NewEntry extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div>
         <Layout>
           <Header>Your Greatest Achievo</Header>
           <TextInput
