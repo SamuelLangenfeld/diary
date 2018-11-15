@@ -8,36 +8,6 @@ import { withRouter } from "react-router-dom";
 const fetch = window.fetch;
 
 class NewEntry extends Component {
-  componentDidMount() {
-    // var headers = new Headers();
-    // headers.append("content-type", "application/json");
-    // const options = {
-    //   method: "POST",
-    //   body: JSON.stringify({ title: "newest", body: "test body" }),
-    //   headers
-    // };
-    // fetch("/api/entries", options)
-    //   .then(response => console.log(response))
-    //   .catch(err => console.log(err));
-    // if (!this.props.id) {
-    //   return;
-    // }
-    // var headers = new Headers();
-    // headers.append("content-type", "application/json");
-    // const options = {
-    //   headers
-    // };
-    // fetch(`/api/entries/${this.props.id}`, options)
-    //   .then(res => res.json())
-    //   .then(json => {
-    //     this.setState(state => {
-    //       const { title, body } = json;
-    //       return { ...state, title, body };
-    //     });
-    //   })
-    //   .catch(err => console.log(err));
-  }
-
   constructor(props) {
     super(props);
     this.state = { title: "", body: "" };

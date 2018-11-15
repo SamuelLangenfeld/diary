@@ -25,29 +25,45 @@ class EditEntry extends Component {
     // }
   }
 
+  constructor(props) {
+    super(props);
+    const { entries, currentEntry } = this.props;
+    const { body, title } = entries[currentEntry];
+    this.state = { body, title };
+  }
+
   changeHandler = e => {
     const { name, value } = e.target;
-    this.props.updateContext({
-      currentEntry: { ...this.props.currentEntry, [name]: value }
+    this.setState(state => {
+      return { ...state, [name]: value };
     });
   };
 
   saveEntry = () => {
+    const { body, title } = this.state;
+    const { currentEntry } = this.props;
+    const editedEntry = { body, title };
     var headers = new Headers();
     headers.append("content-type", "application/json");
     const options = {
       method: "POST",
-      body: JSON.stringify({ ...this.props.currentEntry }),
+      body: JSON.stringify(editedEntry),
       headers
     };
-    fetch(`/api/entries/${this.props.currentEntry.id}`, options)
+    fetch(`/api/entries/${currentEntry}`, options)
       .then(response => response.json())
       .then(json => {
         const entries = { ...this.props.entries };
-        entries[json.id] = json;
-        this.props.updateContext({ currentEntry: json, entries });
+        this.props.updateContext(
+          { currentEntry: null, entries },
+          this.redirect
+        );
       })
       .catch(err => console.log(err));
+  };
+
+  redirect = () => {
+    this.props.history.push("/entries");
   };
 
   deleteEntry = () => {
@@ -55,21 +71,23 @@ class EditEntry extends Component {
     headers.append("content-type", "application/json");
     const options = {
       method: "DELETE",
-      body: JSON.stringify({ id: this.props.currentEntry.id }),
+      body: JSON.stringify({ id: this.props.currentEntry }),
       headers
     };
-    fetch(`/api/entries/${this.props.currentEntry.id}`, options)
+    fetch(`/api/entries/${this.props.currentEntry}`, options)
       .then(response => {
         const entries = { ...this.props.entries };
-        delete entries[this.props.currentEntry.id];
-        this.props.updateContext({ currentEntry: {}, entries });
-        this.props.history.push("/entries");
+        delete entries[this.props.currentEntry];
+        this.props.updateContext(
+          { currentEntry: null, entries },
+          this.redirect
+        );
       })
       .catch(err => console.log(err));
   };
 
   render() {
-    const { title, body } = this.props.currentEntry;
+    const { title, body } = this.state;
     return (
       <div className="App">
         <Layout>

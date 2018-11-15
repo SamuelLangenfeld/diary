@@ -55,7 +55,7 @@ class EntriesPage extends React.Component {
         const entry = entries[entryId];
         const clickListener = () => {
           this.props.updateContext({
-            currentEntry: { ...entry }
+            currentEntry: entry.id
           });
         };
 

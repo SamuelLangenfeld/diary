@@ -97,7 +97,7 @@ class App extends Component {
     super(props);
     this.state = {
       loggedIn: false,
-      currentEntry: {},
+      currentEntry: null,
       entries: {},
       updateContext: (obj, callback) => {
         console.log("it happened!");

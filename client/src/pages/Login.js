@@ -18,7 +18,8 @@ class Login extends Component {
     this.setState(state => ({ ...state, password }));
   };
 
-  attemptLogin = () => {
+  attemptLogin = e => {
+    e.preventDefault();
     const { password } = this.state;
     var headers = new Headers();
     headers.append("content-type", "application/json");
@@ -48,24 +49,22 @@ class Login extends Component {
 
   render() {
     return (
-      <Layout>
-        <Header>{"Login to Do Anything"}</Header>
-        <div style={{ display: "inline-block" }}>
-          <TextInput
-            placeholder={"Password"}
-            name={"user"}
-            onChange={this.changePassword}
-            type={"password"}
-          />
-        </div>
-        <Button
-          variant={"contained"}
-          color={"primary"}
-          onClick={this.attemptLogin}
-        >
-          Login Bro
-        </Button>
-      </Layout>
+      <form onSubmit={this.attemptLogin}>
+        <Layout>
+          <Header>{"Login to Do Anything"}</Header>
+          <div style={{ display: "inline-block" }}>
+            <TextInput
+              placeholder={"Password"}
+              name={"user"}
+              onChange={this.changePassword}
+              type={"password"}
+            />
+          </div>
+          <Button variant={"contained"} color={"primary"} type={"submit"}>
+            Login Bro
+          </Button>
+        </Layout>
+      </form>
     );
   }
 }
