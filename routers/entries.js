@@ -15,9 +15,10 @@ router.post("/:id", async (req, res, next) => {
     entry.title = title;
     entry.body = body;
     entry = await entry.save();
-    entry = entryToJSON(entryObj);
+    entry = entryToJSON(entry);
     res.json(entry);
   } catch (e) {
+    console.log("error", e);
     next(e);
   }
 });
