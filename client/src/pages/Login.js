@@ -36,7 +36,7 @@ class Login extends Component {
           entries[entry.id] = entry;
         });
         this.props.updateContext(
-          { loggedIn: true, entries: json },
+          { loggedIn: true, entries },
           this.redirect
         );
       })
