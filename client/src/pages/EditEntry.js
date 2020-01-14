@@ -52,8 +52,11 @@ class EditEntry extends Component {
     };
     fetch(`/api/entries/${currentEntry}`, options)
       .then(response => response.json())
-      .then(json => {
-        const entries = { ...this.props.entries };
+      .then(returnedEntry => {
+        const entries = {
+          ...this.props.entries,
+          [returnedEntry.id]: returnedEntry,
+        };
         this.props.updateContext(
           { currentEntry: null, entries },
           this.redirect

@@ -100,9 +100,6 @@ class App extends Component {
       currentEntry: null,
       entries: {},
       updateContext: (obj, callback) => {
-        console.log("it happened!");
-        console.log(obj);
-        console.log(callback);
         this.setState(state => {
           return { ...state, ...obj };
         }, callback);
