@@ -93,9 +93,8 @@ app.use(express.static(path.join(__dirname, "client/build")));
 // Logging
 // ----------------------------------------
 const morgan = require("morgan");
-const morganToolkit = require("morgan-toolkit")(morgan);
 
-app.use(morganToolkit());
+app.use(morgan());
 
 // ----------------------------------------
 // Routes
